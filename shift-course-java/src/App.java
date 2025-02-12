@@ -10,7 +10,12 @@ public class App {
     }
 
     public static boolean isFloat(String string) {
-        return string.matches("-?\\d+\\.\\d+");
+        try {  
+            Double.parseDouble(string);  
+            return true;
+          } catch(NumberFormatException e){  
+            return false;  
+          } 
     }
 
     public static String checkType(String string) {
@@ -29,6 +34,8 @@ public class App {
             return;
         }
 
+        Data results = new Data();
+
         for (String filePath : args) {
             File file = new File(filePath);
             if (file.exists() && file.isFile()) {
@@ -36,8 +43,8 @@ public class App {
                     List<String> lines = Files.readAllLines(Paths.get(filePath));
                     System.out.println(filePath);
                     for (String line : lines) {
-                        String res = checkType(line);
-                        System.out.println(line + " " + res);
+                        String type = checkType(line);
+                        results.addElement(line, type);
                     }
                 } catch (IOException e) {
                     System.out.println("Couldn't read file " + filePath);
@@ -47,5 +54,6 @@ public class App {
                 System.out.println("FIle not found " + filePath);
             }
         }
+        results.displayLists();
     }
 }
