@@ -1,5 +1,5 @@
 Lorem ipsum dolor sit amet
-45
+42
 Пример
 3.1415
 consectetur adipiscing

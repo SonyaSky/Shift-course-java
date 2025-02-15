@@ -1,7 +1,10 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -28,6 +31,29 @@ public class App {
         return "string";
     }
 
+    public static void writeFile(String path, String name, ArrayList<String> data) {
+        BufferedWriter writer = null;
+        if (data.isEmpty()) return;
+        try {
+            writer = new BufferedWriter(new FileWriter(path + File.separator + name));
+
+            for (String line : data) {
+                writer.write(line);
+                writer.newLine(); 
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); 
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close(); 
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Error: no files have been given");
@@ -51,9 +77,16 @@ public class App {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("FIle not found " + filePath);
+                System.out.println("File not found " + filePath);
             }
         }
+
         results.displayLists();
+
+        String currentDir = new File(".").getAbsolutePath();
+        writeFile(currentDir, "integers.txt", results.getIntegers());
+        writeFile(currentDir, "floats.txt", results.getFloats());
+        writeFile(currentDir, "strings.txt", results.getStrings());
+
     }
 }
