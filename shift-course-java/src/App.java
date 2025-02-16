@@ -31,11 +31,11 @@ public class App {
         return "string";
     }
 
-    public static void writeFile(String path, String name, ArrayList<String> data) {
+    public static void writeFile(String path, String prefix, String name, ArrayList<String> data) {
         BufferedWriter writer = null;
         if (data.isEmpty()) return;
         try {
-            writer = new BufferedWriter(new FileWriter(path + File.separator + name));
+            writer = new BufferedWriter(new FileWriter(path + File.separator + prefix + name));
 
             for (String line : data) {
                 writer.write(line);
@@ -62,7 +62,42 @@ public class App {
 
         Data results = new Data();
 
-        for (String filePath : args) {
+        String currentDir = new File(".").getAbsolutePath();
+        String prefix = "";
+        ArrayList<String> inputFiles = new ArrayList<>();
+        String statistic = "none";
+
+        int i = 0;
+        while (i < args.length) {
+            switch (args[i]) {
+                case "-o":
+                    if (i+1 < args.length) {
+                        currentDir = args[i+1];
+                        i++;
+                    }
+                    break;
+                case "-p":
+                    if (i+1 < args.length) {
+                        prefix = args[i+1];
+                        i++;
+                    }
+                    break;
+                case "-a":
+                    break;
+                case "-s":
+                    statistic = "short";
+                    break;
+                case "-f":
+                    statistic = "full";
+                    break;
+                default:
+                    inputFiles.add(args[i]);
+                    break;
+            }
+            i++;
+        }
+
+        for (String filePath : inputFiles) {
             File file = new File(filePath);
             if (file.exists() && file.isFile()) {
                 try {
@@ -82,11 +117,11 @@ public class App {
         }
 
         results.displayLists();
+        results.showStatistic(statistic);
 
-        String currentDir = new File(".").getAbsolutePath();
-        writeFile(currentDir, "integers.txt", results.getIntegers());
-        writeFile(currentDir, "floats.txt", results.getFloats());
-        writeFile(currentDir, "strings.txt", results.getStrings());
+        writeFile(currentDir, prefix, "integers.txt", results.getIntegers());
+        writeFile(currentDir, prefix, "floats.txt", results.getFloats());
+        writeFile(currentDir, prefix, "strings.txt", results.getStrings());
 
     }
 }
