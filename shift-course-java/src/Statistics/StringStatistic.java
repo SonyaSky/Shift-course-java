@@ -5,13 +5,28 @@ public class StringStatistic extends Statistic {
         super();
     }
 
-    public void addString(String element) {
-        super.addElement((double) element.length());
+    @Override
+    public void addElement(String element) {
+        super.addElement(element);
+        if (quantity == 1) {
+            minElement = 0;
+            maxElement = 0;
+        } else {
+            if (element.length() > data.get(maxElement).length()) {
+                maxElement = quantity - 1;
+            }
+            if (element.length() < data.get(minElement).length()) {
+                minElement = quantity - 1;
+            }
+        }
     }
 
     public void showFullStatistic(String file) {
+        if (data.isEmpty()) {
+            return;
+        }
         super.showShortStatistic(file);
-        System.out.println("Length of the longest string: " + maxElement);
-        System.out.println("Length of the shortest string: " + minElement);
+        System.out.println("Length of the longest string: " + data.get(maxElement).length());
+        System.out.println("Length of the shortest string: " + data.get(minElement).length());
     }
 }
