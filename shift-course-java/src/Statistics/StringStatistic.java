@@ -6,7 +6,13 @@ public class StringStatistic extends Statistic {
     }
 
     public void addString(String element) {
-        super.addElement((double) element.length());
+        super.addElement(element);
+        if (element.length() > data.get(maxElement).length()) {
+            maxElement = quantity - 1;
+        }
+        if (element.length() < data.get(minElement).length()) {
+            minElement = quantity - 1;
+        }
     }
 
     public void showFullStatistic(String file) {

@@ -116,7 +116,6 @@ public class App {
             }
         }
 
-        results.displayLists();
         results.showStatistic(statistic);
 
         writeFile(currentDir, prefix, "integers.txt", results.getIntegers());

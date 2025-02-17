@@ -1,11 +1,16 @@
 package Statistics;
+
+import java.util.ArrayList;
+
 public class Statistic {
-    protected double minElement;
-    protected double maxElement;
+    protected ArrayList<String> data;
+    protected int minElement;
+    protected int maxElement;
     protected int quantity;
 
     public Statistic() {
         quantity = 0;
+        data = new ArrayList<>();
     }
 
     public void showShortStatistic(String file) {
@@ -13,18 +18,17 @@ public class Statistic {
         System.out.println("Number of elements: " + quantity);
     }
 
-    public void addElement(double element) {
+    public void addElement(String element) {
         if (quantity == 0) {
-            maxElement = element;
-            minElement = element;
-        }
-        else if (element < minElement) {
-            minElement = element;
-        }
-        else if (element > maxElement) {
-            maxElement = element;
+            maxElement = 0;
+            minElement = 0;
         }
         quantity++;
+        data.add(element);
+    }
+
+    public ArrayList<String> getData() {
+        return data;
     }
 
 }
