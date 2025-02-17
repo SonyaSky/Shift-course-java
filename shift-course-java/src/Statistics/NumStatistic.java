@@ -42,6 +42,9 @@ public class NumStatistic extends Statistic{
     }
 
     public void showFullStatistic(String file, boolean isInt) {
+        if (data.isEmpty()) {
+            return;
+        }
         super.showShortStatistic(file);
         if (isInt) {
             System.out.println("Sum of the elements: " + intSum);

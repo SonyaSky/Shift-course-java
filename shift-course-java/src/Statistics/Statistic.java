@@ -14,6 +14,10 @@ public class Statistic {
     }
 
     public void showShortStatistic(String file) {
+        if (data.isEmpty()) {
+            return;
+        }
+        System.out.println();
         System.out.println(file);
         System.out.println("Number of elements: " + quantity);
     }

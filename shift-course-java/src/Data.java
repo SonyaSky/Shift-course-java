@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import Statistics.NumStatistic;
+import Statistics.Statistics;
 import Statistics.StringStatistic;
 
 public class Data {
@@ -23,7 +24,7 @@ public class Data {
                 floatStatistic.addElement(element, type);
                 break;
             case "string":
-                stringStatistic.addString(element);
+                stringStatistic.addElement(element);
                 break;
             default:
                 break;
@@ -39,7 +40,7 @@ public class Data {
     }
 
     public ArrayList<String> getStrings() {
-        return intStatistic.getData();
+        return stringStatistic.getData();
     }
 
     public void displayLists() {
@@ -48,33 +49,17 @@ public class Data {
         System.out.println("String List: " + getStrings());
     }
 
-    public void showStatistic(String type) {
+    public void showStatistic(Statistics type) {
         switch (type) {
-            case "short":
-                if (!getIntegers().isEmpty()) {
-                    intStatistic.showShortStatistic("Integers:");
-                    System.out.println();
-                }
-                if (!getFloats().isEmpty()) {
-                    floatStatistic.showShortStatistic("Floats:");
-                    System.out.println();
-                }
-                if (!getStrings().isEmpty()) {
-                    stringStatistic.showShortStatistic("Strings:");
-                }
+            case SHORT:
+                intStatistic.showShortStatistic("Integers:");
+                floatStatistic.showShortStatistic("Floats:");
+                stringStatistic.showShortStatistic("Strings:");
                 break;
-            case "full":
-                if (!getIntegers().isEmpty()) {
-                    intStatistic.showFullStatistic("Integers:", true);
-                    System.out.println();
-                }
-                if (!getFloats().isEmpty()) {
-                    floatStatistic.showFullStatistic("Floats:", false);
-                    System.out.println();
-                }
-                if (!getStrings().isEmpty()) {
-                    stringStatistic.showFullStatistic("Strings:");
-                }
+            case FULL:
+                intStatistic.showFullStatistic("Integers:", true);
+                floatStatistic.showFullStatistic("Floats:", false);
+                stringStatistic.showFullStatistic("Strings:");
                 break;
             default:
                 break;

@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import Statistics.Statistics;
+
 public class App {
     public static boolean isInteger(String string) {
         return string.matches("-?\\d+");
@@ -31,11 +33,18 @@ public class App {
         return "string";
     }
 
-    public static void writeFile(String path, String prefix, String name, ArrayList<String> data) {
+    public static void writeFile(String path, ArrayList<String> data, boolean addToFile) {
         BufferedWriter writer = null;
         if (data.isEmpty()) return;
+
+        File file = new File(path);
+
+        if (!file.exists()) {
+            System.out.println("File " + path + " was not found, so it will be created");
+        }
+
         try {
-            writer = new BufferedWriter(new FileWriter(path + File.separator + prefix + name));
+            writer = new BufferedWriter(new FileWriter(path, addToFile));
 
             for (String line : data) {
                 writer.write(line);
@@ -63,32 +72,32 @@ public class App {
         Data results = new Data();
 
         String currentDir = new File(".").getAbsolutePath();
-        String prefix = "";
+        Options options = new Options(currentDir);
         ArrayList<String> inputFiles = new ArrayList<>();
-        String statistic = "none";
 
         int i = 0;
         while (i < args.length) {
             switch (args[i]) {
                 case "-o":
                     if (i+1 < args.length) {
-                        currentDir = args[i+1];
+                        options.path = args[i+1];
                         i++;
                     }
                     break;
                 case "-p":
                     if (i+1 < args.length) {
-                        prefix = args[i+1];
+                        options.prefix = args[i+1];
                         i++;
                     }
                     break;
                 case "-a":
+                    options.addToFile = true;
                     break;
                 case "-s":
-                    statistic = "short";
+                    options.statistics = Statistics.SHORT;
                     break;
                 case "-f":
-                    statistic = "full";
+                    options.statistics = Statistics.FULL;
                     break;
                 default:
                     inputFiles.add(args[i]);
@@ -102,7 +111,6 @@ public class App {
             if (file.exists() && file.isFile()) {
                 try {
                     List<String> lines = Files.readAllLines(Paths.get(filePath));
-                    System.out.println(filePath);
                     for (String line : lines) {
                         String type = checkType(line);
                         results.addElement(line, type);
@@ -116,11 +124,12 @@ public class App {
             }
         }
 
-        results.showStatistic(statistic);
+        results.showStatistic(options.statistics);
+        //results.displayLists();
 
-        writeFile(currentDir, prefix, "integers.txt", results.getIntegers());
-        writeFile(currentDir, prefix, "floats.txt", results.getFloats());
-        writeFile(currentDir, prefix, "strings.txt", results.getStrings());
+        writeFile(options.createFileName("integers.txt"), results.getIntegers(), options.addToFile);
+        writeFile(options.createFileName("floats.txt"), results.getFloats(), options.addToFile);
+        writeFile(options.createFileName("strings.txt"), results.getStrings(), options.addToFile);
 
     }
 }
