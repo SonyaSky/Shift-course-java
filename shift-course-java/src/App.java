@@ -36,15 +36,26 @@ public class App {
     public static void writeFile(String path, ArrayList<String> data, boolean addToFile) {
         BufferedWriter writer = null;
         if (data.isEmpty()) return;
+        boolean addToFileflag = addToFile;
 
-        File file = new File(path);
+        if (addToFile) {
+            File file = new File(path);
 
-        if (!file.exists()) {
-            System.out.println("File " + path + " was not found, so it will be created");
+            if (!file.exists()) {
+                System.out.println("File " + path + " was not found, so it will be created");
+            }
+            else {
+                addToFileflag = true;
+            }
         }
 
         try {
-            writer = new BufferedWriter(new FileWriter(path, addToFile));
+            if (addToFileflag) {
+                writer = new BufferedWriter(new FileWriter(path, true));
+            }
+            else {
+                writer = new BufferedWriter(new FileWriter(path));
+            }
 
             for (String line : data) {
                 writer.write(line);
@@ -72,7 +83,10 @@ public class App {
         Data results = new Data();
 
         String currentDir = new File(".").getAbsolutePath();
-        Options options = new Options(currentDir);
+        String parentDir = new File(currentDir).getParent();
+        String grandparentDir = new File(parentDir).getParent();
+
+        Options options = new Options(grandparentDir);
         ArrayList<String> inputFiles = new ArrayList<>();
 
         int i = 0;
@@ -80,6 +94,10 @@ public class App {
             switch (args[i]) {
                 case "-o":
                     if (i+1 < args.length) {
+                        File outputDirectory = new File(args[i+1]);
+                        if (!outputDirectory.exists()) {
+                            outputDirectory.mkdirs();
+                        }
                         options.path = args[i+1];
                         i++;
                     }
