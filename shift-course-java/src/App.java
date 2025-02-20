@@ -76,7 +76,7 @@ public class App {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.out.println("Error: no files have been given");
+            System.err.println("Error: no files have been given");
             return;
         }
 
@@ -84,9 +84,8 @@ public class App {
 
         String currentDir = new File(".").getAbsolutePath();
         String parentDir = new File(currentDir).getParent();
-        String grandparentDir = new File(parentDir).getParent();
 
-        Options options = new Options(grandparentDir);
+        Options options = new Options(parentDir);
         ArrayList<String> inputFiles = new ArrayList<>();
 
         int i = 0;
@@ -96,16 +95,23 @@ public class App {
                     if (i+1 < args.length) {
                         File outputDirectory = new File(args[i+1]);
                         if (!outputDirectory.exists()) {
+                            System.out.println("The output directory doesn't exists, so it will be created.");
                             outputDirectory.mkdirs();
                         }
                         options.path = args[i+1];
                         i++;
+                    }
+                    else {
+                        System.out.println("No output directory has been given. Using default directory...");
                     }
                     break;
                 case "-p":
                     if (i+1 < args.length) {
                         options.prefix = args[i+1];
                         i++;
+                    }
+                    else {
+                        System.out.println("No prefix has been given. Using default names for files...");
                     }
                     break;
                 case "-a":
@@ -124,6 +130,11 @@ public class App {
             i++;
         }
 
+        if (inputFiles.isEmpty()) {
+            System.err.println("Error: no files have been given");
+            return;
+        }
+
         for (String filePath : inputFiles) {
             File file = new File(filePath);
             if (file.exists() && file.isFile()) {
@@ -134,11 +145,11 @@ public class App {
                         results.addElement(line, type);
                     }
                 } catch (IOException e) {
-                    System.out.println("Couldn't read file " + filePath);
+                    System.err.println("Couldn't read file: " + filePath);
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("File not found " + filePath);
+                System.err.println("File not found: " + filePath);
             }
         }
 
